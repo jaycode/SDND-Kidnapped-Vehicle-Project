@@ -34,6 +34,8 @@ int main() {
 	double delta_t = 0.1; // Time elapsed between measurements [sec]
 	double sensor_range = 50; // Sensor range [m]
 	
+  int M = 100; // Number of particles
+
 	/*
 	 * Sigmas - just an estimate, usually comes from uncertainty of sensor, but
 	 * if you used fused data from multiple sensors, it's difficult to find
@@ -73,11 +75,12 @@ int main() {
 	
 	// Run particle filter!
 	int num_time_steps = position_meas.size();
-	ParticleFilter pf;
+	ParticleFilter pf {M};
 	double total_error[3] = {0,0,0};
 	double cum_mean_error[3] = {0,0,0};
 	
 	for (int i = 0; i < num_time_steps; ++i) {
+    cout << num_time_steps << endl;
 		cout << "Time step: " << i << endl;
 		// Read in landmark observations for current time step.
 		ostringstream file;

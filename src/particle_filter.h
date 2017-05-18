@@ -10,6 +10,7 @@
 #define PARTICLE_FILTER_H_
 
 #include "helper_functions.h"
+#include <string>
 
 struct Particle {
 
@@ -18,6 +19,9 @@ struct Particle {
 	double y;
 	double theta;
 	double weight;
+	std::vector<int> associations;
+	std::vector<double> sense_x;
+	std::vector<double> sense_y;
 };
 
 
@@ -32,7 +36,8 @@ class ParticleFilter {
 	// Flag, if filter is initialized
 	bool is_initialized;
 	
-	// Vector of weights of all particles
+	// Vector of weights of all particles.
+	// Needed for resample function.
 	std::vector<double> weights;
 	
 public:
@@ -42,7 +47,7 @@ public:
 
 	// Constructor
 	// @param M Number of particles
-	ParticleFilter() : num_particles(0), is_initialized(false) {}
+	ParticleFilter(int M) : num_particles(M), is_initialized(false) {}
 
 	// Destructor
 	~ParticleFilter() {}
@@ -77,6 +82,14 @@ public:
 	 */
 	void dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations);
 	
+	Particle setAssociations(Particle particle, std::vector<int> associations,
+		                       std::vector<double> sense_x, std::vector<double> sense_y);
+
+	std::string getAssociations(Particle best);
+	std::string getSenseX(Particle best);
+	std::string getSenseY(Particle best);
+
+
 	/**
 	 * updateWeights Updates the weights for each particle based on the likelihood of the 
 	 *   observed measurements. 
@@ -100,7 +113,7 @@ public:
 	 * @param filename File to write particle positions to.
 	 */
 	void write(std::string filename);
-	
+
 	/**
 	 * initialized Returns whether particle filter is initialized yet or not.
 	 */
